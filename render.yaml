@@ -21,4 +21,4 @@ databases:
     plan: free
     region: oregon
     databaseName: phone_download
-    user: postgres
+    user: gruhalakshmi_user
