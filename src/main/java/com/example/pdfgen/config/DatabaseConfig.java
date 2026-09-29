@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Primary;
 import javax.sql.DataSource;
 import java.net.URI;
 
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
+
 @Configuration
 public class DatabaseConfig {
 
@@ -69,4 +71,15 @@ public class DatabaseConfig {
         config.setDriverClassName("org.postgresql.Driver");
         return new HikariDataSource(config);
     }
+
+    @Bean
+    public FlywayMigrationStrategy flywayMigrationStrategy() {
+        return flyway -> {
+            log.info("Repairing Flyway schema history...");
+            flyway.repair();
+            log.info("Applying Flyway migrations...");
+            flyway.migrate();
+        };
+    }
 }
+

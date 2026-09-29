@@ -1,4 +1,4 @@
-# Flyway migration to create tables for phone whitelist and download tracking
+-- Flyway migration to create tables for phone whitelist and download tracking
 
 CREATE TABLE users (
     id BIGSERIAL PRIMARY KEY,
