@@ -1,5 +1,21 @@
 version: '3.9'
+
 services:
+  app:
+    build: .
+    container_name: gruhalakshmi_app
+    ports:
+      - "8082:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/phone_download
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - ADMIN_PIN=admin123
+      - PORT=8080
+    depends_on:
+      db:
+        condition: service_healthy
+
   db:
     image: postgres:15-alpine
     container_name: phone_download_db
@@ -16,5 +32,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
 volumes:
   pg_data:

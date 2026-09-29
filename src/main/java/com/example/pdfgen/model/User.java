@@ -1,5 +1,6 @@
 package com.example.pdfgen.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.Set;
@@ -20,8 +21,13 @@ public class User {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Download> downloads;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserSession> sessions;
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -34,4 +40,6 @@ public class User {
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
     public Set<Download> getDownloads() { return downloads; }
     public void setDownloads(Set<Download> downloads) { this.downloads = downloads; }
+    public Set<UserSession> getSessions() { return sessions; }
+    public void setSessions(Set<UserSession> sessions) { this.sessions = sessions; }
 }

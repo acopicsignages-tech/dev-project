@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface UserSessionRepository extends JpaRepository<UserSession, Long> {
     Optional<UserSession> findByToken(UUID token);
+    void deleteByUserId(Long userId);
 }

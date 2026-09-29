@@ -1,6 +1,24 @@
-# .gitignore
+# Build artifacts
+target/
+frontend/dist/
+frontend/node_modules/
 node_modules/
+*.jar
+*.war
+*.zip
+*.tar.gz
+
+# Environment & logs
 .env
+*.log
+app.log
+
+# IDE & OS
 .DS_Store
+.idea/
+*.iml
+.vscode/
+
+# Database & temporary
 prisma/*.db
 prisma/migrations/

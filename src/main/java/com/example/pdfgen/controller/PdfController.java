@@ -63,7 +63,7 @@ public class PdfController {
             byte[] pdfBytes = pdfService.generatePdf(request);
 
             // Record download in database
-            recordDownload(authHeader, httpRequest);
+            recordDownload(request, authHeader, httpRequest);
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION,
@@ -76,7 +76,7 @@ public class PdfController {
         }
     }
 
-    private void recordDownload(String authHeader, HttpServletRequest httpRequest) {
+    private void recordDownload(PdfRequest request, String authHeader, HttpServletRequest httpRequest) {
         try {
             User user = null;
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -89,6 +89,11 @@ public class PdfController {
             if (user != null) {
                 Download download = new Download();
                 download.setUser(user);
+                if (request != null) {
+                    download.setName(request.getName());
+                    download.setRationNumber(request.getRationCardNumber());
+                    download.setDateInfo(request.getDate());
+                }
                 download.setResourceType("PDF_SANCTION_ORDER");
                 download.setDownloadedAt(Instant.now());
                 if (httpRequest != null) {
@@ -99,8 +104,8 @@ public class PdfController {
                     download.setClientIp(ip);
                 }
                 downloadRepository.save(download);
-                log.info("Download saved to database: id={}, userId={}, phone={}",
-                        download.getId(), user.getId(), user.getPhone());
+                log.info("Download saved to database: id={}, userId={}, phone={}, name={}, ration={}",
+                        download.getId(), user.getId(), user.getPhone(), download.getName(), download.getRationNumber());
             } else {
                 log.warn("Download record skipped: No user found in database or session.");
             }

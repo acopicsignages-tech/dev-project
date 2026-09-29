@@ -1,22 +1,24 @@
 services:
   - type: web
-    name: phone-download-service
-    env: node
-    plan: free
-    buildCommand: npm install && npx prisma generate && npm run prisma migrate deploy
-    startCommand: npm start
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase: postgres-db
-      - key: ADMIN_TOKEN
-        value: "CHANGE_ME_TO_STRONG_TOKEN"
-    autoDeploy: true
-
-  - type: postgresql
-    name: postgres-db
+    name: gruhalakshmi-pdf-generator
+    env: docker
+    dockerfilePath: ./Dockerfile
     plan: free
     region: oregon
-    databases:
-      - name: default
-        user: postgres
-        password: ${POSTGRES_PASSWORD}
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: gruhalakshmi-postgres
+          property: connectionString
+      - key: ADMIN_PIN
+        generateValue: true
+
+databases:
+  - name: gruhalakshmi-postgres
+    plan: free
+    region: oregon
+    databaseName: phone_download
+    user: postgres

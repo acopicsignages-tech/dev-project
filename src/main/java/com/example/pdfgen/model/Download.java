@@ -27,6 +27,15 @@ public class Download {
     @Column(name = "client_ip")
     private String clientIp;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "ration_number")
+    private String rationNumber;
+
+    @Column(name = "date_info")
+    private String dateInfo;
+
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -40,4 +49,10 @@ public class Download {
     public void setDownloadedAt(Instant downloadedAt) { this.downloadedAt = downloadedAt; }
     public String getClientIp() { return clientIp; }
     public void setClientIp(String clientIp) { this.clientIp = clientIp; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getRationNumber() { return rationNumber; }
+    public void setRationNumber(String rationNumber) { this.rationNumber = rationNumber; }
+    public String getDateInfo() { return dateInfo; }
+    public void setDateInfo(String dateInfo) { this.dateInfo = dateInfo; }
 }

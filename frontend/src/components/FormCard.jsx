@@ -11,10 +11,15 @@ export default function FormCard({
   paymentError,
   paymentConfig,
   onRetryDownload,
-  lastCapturedOrderId
+  lastCapturedOrderId,
+  onFieldChange
 }) {
   const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (onFieldChange) {
+      onFieldChange(field, value);
+    } else {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    }
   };
 
   const handleNameKeyDown = (e) => {
@@ -203,39 +208,41 @@ export default function FormCard({
 
         {/* Action Buttons */}
         <div className="button-stack">
-          {paymentStage === 'success' ? (
+          <button
+            id="proceed-payment-btn"
+            type="submit"
+            className="btn-primary"
+            disabled={isBusy}
+          >
+            {paymentStage === 'creating' ? (
+              <>
+                <span className="spinner"></span>
+                <span>Generating PDF...</span>
+              </>
+            ) : paymentStage === 'failed' ? (
+              <>
+                <RefreshCw size={18} />
+                <span>Try Generating Again</span>
+              </>
+            ) : (
+              <>
+                <Sparkles size={18} />
+                <span>Generate & Download PDF</span>
+              </>
+            )}
+          </button>
+
+          {paymentStage === 'success' && (
             <button
               type="button"
-              className="btn-primary"
+              className="btn-secondary"
               onClick={onRetryDownload}
               disabled={isBusy}
+              style={{ width: '100%', justifyContent: 'center' }}
+              title="Re-download the last generated PDF without regenerating"
             >
-              <RefreshCw size={18} />
-              <span>Download PDF Again</span>
-            </button>
-          ) : (
-            <button
-              id="proceed-payment-btn"
-              type="submit"
-              className="btn-primary"
-              disabled={isBusy}
-            >
-              {paymentStage === 'creating' ? (
-                <>
-                  <span className="spinner"></span>
-                  <span>Generating PDF...</span>
-                </>
-              ) : paymentStage === 'failed' ? (
-                <>
-                  <RefreshCw size={18} />
-                  <span>Try Again</span>
-                </>
-              ) : (
-                <>
-                  <Lock size={18} />
-                  <span>Generate PDF</span>
-                </>
-              )}
+              <RefreshCw size={16} />
+              <span>Re-download Last PDF</span>
             </button>
           )}
         </div>

@@ -3,6 +3,7 @@ import Header from './components/Header';
 import FormCard from './components/FormCard';
 import PdfViewerSection from './components/PdfViewerSection';
 import LoginCard from './components/LoginCard';
+import AdminPortal from './components/AdminPortal';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
 import { transliterateToKannada, isKannadaText } from './utils/kannadaTransliterate';
 import './App.css';
@@ -16,6 +17,7 @@ const EMPTY_FORM = {
 export default function App() {
   const [authToken, setAuthToken] = useState(() => sessionStorage.getItem('auth_token'));
   const [userPhone, setUserPhone] = useState(() => sessionStorage.getItem('phone'));
+  const [showAdmin, setShowAdmin] = useState(false);
   const [formData, setFormData] = useState(EMPTY_FORM);
   const [paymentStage, setPaymentStage] = useState('idle');
   const [paymentError, setPaymentError] = useState(null);
@@ -147,6 +149,14 @@ export default function App() {
     }
   };
 
+  const handleFieldChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (paymentStage !== 'idle' && paymentStage !== 'creating') {
+      setPaymentStage('idle');
+      setPaymentError(null);
+    }
+  };
+
   const handleReset = () => {
     setFormData(EMPTY_FORM);
     setPaymentStage('idle');
@@ -164,10 +174,17 @@ export default function App() {
         authToken={authToken}
         userPhone={userPhone}
         onLogout={handleLogout}
+        onOpenAdmin={() => setShowAdmin(!showAdmin)}
+        isAdminOpen={showAdmin}
       />
 
       <main className="main-content">
-        {!authToken ? (
+        {showAdmin ? (
+          <AdminPortal
+            onClose={() => setShowAdmin(false)}
+            showToast={showToast}
+          />
+        ) : !authToken ? (
           <LoginCard onLoginSuccess={handleLoginSuccess} />
         ) : (
           <>
@@ -185,6 +202,7 @@ export default function App() {
               <FormCard
                 formData={formData}
                 setFormData={setFormData}
+                onFieldChange={handleFieldChange}
                 onProceedToPayment={handleGeneratePdf}
                 onReset={handleReset}
                 paymentStage={paymentStage}
